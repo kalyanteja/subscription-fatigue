@@ -7,9 +7,9 @@ const subscriptionSchema = new Schema({
         type: String,
         required: true,
     },
-    companyId: {
-        type: Number,
-        required: true
+    company: {
+        type: Schema.Types.ObjectId,
+        ref: 'Company'
     },
     description: {
         type: String,

@@ -2,11 +2,22 @@ const bcrypt = require('bcryptjs');
 
 const Subscription = require('../../models/subscription');
 const User = require('../../models/user');
+const Company = require('../../models/company');
 
 const user = userId => {
     return User.findById(userId)
         .then(user => {
             return { ...user._doc, createdSubscriptions: subscriptions.bind(this, user.createdSubscriptions) };
+        })
+        .catch(err => {
+            throw err;
+        })
+}
+
+const company = companyId => {
+    return Company.findById(companyId)
+        .then(company => {
+            return { ...company._doc };
         })
         .catch(err => {
             throw err;
@@ -38,7 +49,21 @@ module.exports = {
                 return { 
                     ...sub._doc,
                     creator: user.bind(this, sub._doc.creator),
-                    date: new Date(sub._doc.date).toISOString()
+                    date: new Date(sub._doc.date).toISOString(),
+                    company: company.bind(this, sub._doc.company)
+                };
+            }))
+            .catch(err => {
+                console.log(err);
+                throw err;
+            });
+    },
+    companies: () => {
+        return Company
+            .find()
+            .then(companies => companies.map(company => {
+                return {
+                    ...company._doc,
                 };
             }))
             .catch(err => {
@@ -49,7 +74,7 @@ module.exports = {
     addSubscription: (args) => {
         const subscription = new Subscription({
             name: args.subscriptionInput.name,
-            companyId: args.subscriptionInput.companyId,
+            company: args.subscriptionInput.companyId,
             description: args.subscriptionInput.description,
             period: args.subscriptionInput.period,
             date: new Date(args.subscriptionInput.date),
@@ -61,7 +86,12 @@ module.exports = {
         return subscription
             .save()
             .then(result => {
-                createdSubscription =  { ...result._doc, creator: user.bind(this, result._doc.creator), date: new Date(result._doc.date).toISOString() };
+                createdSubscription =  { 
+                    ...result._doc,
+                    creator: user.bind(this, result._doc.creator), 
+                    date: new Date(result._doc.date).toISOString(),
+                    company: company.bind(this, result._doc.company)
+                 };
                 // hardcoded for now, should be added later when integrated with Client
                 return User.findById('5d10049631287529bc733a53')
             })
@@ -105,5 +135,42 @@ module.exports = {
             .catch(err => { 
                 throw err
             });
+    },
+    addCompany: (args) => {
+        const company = new Company({
+            name: args.companyInput.name,
+            description: args.companyInput.description,
+            isCustom: true,
+            imgPath: ""
+        });
+
+        return Company.findOne({ name: args.companyInput.name })
+            .then(comp => {
+                if(comp){
+                    throw new Exception('Company already exists!');
+                }
+                console.log(company)
+                return company.save();
+            })
+            .then(company => {
+                return { ...company._doc }
+            })
+            .catch(err => { 
+                throw err
+            });
+    },
+    removeSubscription: async args => {
+        subscriptionId = args.id;
+
+        try {
+            console.log('before removing');
+
+            const subscription = await Subscription.findById(subscriptionId).populate('Company');
+
+            await Subscription.deleteOne(subscription);
+            return `Removed ${subscription._doc.name} Subscription!`;
+        } catch (error) {
+            throw error;
+        }
     }
 };
