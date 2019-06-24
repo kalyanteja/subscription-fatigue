@@ -4,10 +4,13 @@ const graphqlHttp = require('express-graphql');
 const mongoose = require('mongoose');
 const buildSchema = require('./graphql/schemas/index');
 const resolvers = require('./graphql/resolvers/index');
+const isAuth = require('./middleware/authchecker');
 
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use(isAuth);
 
 app.use('/graphql', graphqlHttp({
     schema: buildSchema,
@@ -17,7 +20,7 @@ app.use('/graphql', graphqlHttp({
 
 mongoose
     .connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@cluster0-fpxz8.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`)
-    .then(() =>{
+    .then(() => {
         app.listen(3000);
     })
     .catch(err => {

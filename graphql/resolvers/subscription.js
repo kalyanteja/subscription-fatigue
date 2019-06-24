@@ -4,26 +4,34 @@ const User = require('../../models/user');
 const { transformSubscription } = require('../resolvers/common');
 
 module.exports = {
-    subscriptions: () => {
+    subscriptions: (args, req) => {
+        if(!req.isAuth){
+            throw new Error("User not authenticated!");
+        }
+
         return Subscription
             .find()
-            //.populate('creator')
             .then(subs => subs.map(subscription => {
                 return transformSubscription(subscription);
             }))
             .catch(err => {
-                console.log(err);
                 throw err;
             });
     },
-    addSubscription: (args) => {
+    addSubscription: (args, req) => {
+        if(!req.isAuth){
+            throw new Error("User not authenticated!");
+        }
+
+        const userId = req.userId;
+
         const subscription = new Subscription({
             name: args.subscriptionInput.name,
             company: args.subscriptionInput.companyId,
             description: args.subscriptionInput.description,
             period: args.subscriptionInput.period,
             date: new Date(args.subscriptionInput.date),
-            creator: "5d10049631287529bc733a53"
+            creator: userId
         });
 
         let createdSubscription;
@@ -32,8 +40,7 @@ module.exports = {
             .save()
             .then(result => {
                 createdSubscription = transformSubscription(result);
-                // hardcoded for now, should be added later when integrated with Client
-                return User.findById('5d10049631287529bc733a53')
+                return User.findById(userId);
             })
             .then(user => {
                 if(!user){
@@ -47,12 +54,15 @@ module.exports = {
                 return createdSubscription;
             })
             .catch(err => {
-                console.log('save failed', err)
                 throw err;
             });
     },
-    removeSubscription: async args => {
-        subscriptionId = args.id;
+    removeSubscription: async (args, req) => {
+        if(!req.isAuth){
+            throw new Error("User not authenticated!");
+        }
+
+        const subscriptionId = args.id;
 
         try {
             const subscription = await Subscription.findById(subscriptionId).populate('Company');

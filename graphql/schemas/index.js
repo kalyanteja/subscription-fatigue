@@ -27,6 +27,13 @@ type Company {
     imgPath: String
 }
 
+type AuthData {
+    userId: ID!,
+    userName: String!,
+    token: String!,
+    tokenExpiration: Int!
+}
+
 input CompanyInput {
     name: String!,
     description: String,
@@ -49,6 +56,7 @@ input SubscriptionInput {
 type RootQuery {
     subscriptions: [Subscription!]!
     companies: [Company!]!
+    login(email: String!, password: String!): AuthData!
 }
 
 type RootMutation {

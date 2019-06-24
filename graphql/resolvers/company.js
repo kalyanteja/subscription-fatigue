@@ -10,11 +10,14 @@ module.exports = {
                 };
             }))
             .catch(err => {
-                console.log(err);
                 throw err;
             });
     },
-    addCompany: (args) => {
+    addCompany: (args, req) => {
+        if(!req.isAuth){
+            throw new Error("User not authenticated!");
+        }
+
         const company = new Company({
             name: args.companyInput.name,
             description: args.companyInput.description,
