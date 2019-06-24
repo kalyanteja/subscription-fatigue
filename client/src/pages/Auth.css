@@ -1,0 +1,50 @@
+.auth-form {
+    width: 25rem;
+    max-width: 80%;
+    margin: 2rem auto;
+  }
+
+  .auth-heading {
+    margin-left: 45%;
+    margin-top: 105px;
+  }
+  
+  .form-control label,
+  .form-control input {
+    width: 100%;
+    display: block;
+  }
+  
+  .form-control label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    margin-bottom: 1rem;
+  }
+  
+  .form-actions-button {
+    background: #015cd147;
+    border: 1px solid #015cd147;
+    border-radius: 3px;
+    padding: 0.25rem 1rem;
+    margin-right: 1rem;
+    color: white;
+    cursor: pointer;
+  }
+
+  .signup-login-link {
+    background:none;
+    color:inherit;
+    border:none; 
+    padding:0!important;
+    font: inherit;
+    border-bottom:1px solid #444; 
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .error-msg{
+    margin: 5px 0;
+    color: crimson;
+  }
