@@ -1,0 +1,10 @@
+.subscriptions-table {
+    width: 80%;
+    border: solid 1px slategray;
+    margin-top: 100px;
+}
+
+.subscriptions-table td, th {
+    border: solid 1px thistle;
+    margin: 2px;
+}

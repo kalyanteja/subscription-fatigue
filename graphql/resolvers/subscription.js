@@ -10,7 +10,7 @@ module.exports = {
         }
 
         return Subscription
-            .find()
+            .find({creator: req.userId})
             .then(subs => subs.map(subscription => {
                 return transformSubscription(subscription);
             }))

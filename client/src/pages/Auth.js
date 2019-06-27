@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './Auth.css';
+import AuthContext from '../context/auth-context';
 
 class AuthPage extends Component {
 
@@ -9,6 +10,8 @@ class AuthPage extends Component {
         hasError: false,
         errorMessage: ''
     };
+
+    static contextType = AuthContext;
 
     constructor(props){
         super(props);
@@ -43,7 +46,9 @@ class AuthPage extends Component {
             `query {
                 login(email: "${email}", password: "${password}"){
                     token,
-                    userName
+                    userName,
+                    tokenExpiration,
+                    userId
                 }
             }` :
             `mutation {
@@ -68,7 +73,13 @@ class AuthPage extends Component {
             return res.json();
         })
         .then(resData => {
-            console.log(resData);
+            if(resData.data.login.token){
+                this.context.login(
+                    resData.data.login.token,
+                    resData.data.login.tokenExpiration, 
+                    resData.data.login.userId, 
+                    resData.data.login.userName);
+            }
         })
         .catch(err => {
             this.setState({ hasError: true, errorMessage: "Oops! Something's wrong..."});

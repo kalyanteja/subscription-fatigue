@@ -29,15 +29,27 @@
     margin: 0 1rem;
   }
   
-  .main-navigation__items a {
+  .main-navigation__items a,
+  .main-navigation__items button {
     text-decoration: none;
     color: #000;
     font-weight: bold;
+    border: none;
+    font: inherit;
+    background: transparent;
+    cursor: pointer;
   }
   
   .main-navigation__items a:hover,
   .main-navigation__items a:active,
-  .main-navigation__items a.active {
+  .main-navigation__items a.active,
+  .main-navigation__items button:hover,
+  .main-navigation__items button:active {
       color: #ffffff;
       font-weight: bold;
+  }
+
+  .auth-list-item {
+    position: fixed;
+    right: 10px;
   }
