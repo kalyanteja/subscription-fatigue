@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './Table.css';
 
 const Table = (props) => {
@@ -9,16 +8,16 @@ const Table = (props) => {
 
     const tableHeaders = (<thead>
           <tr>
-            {dataColumns.map(function(column) {
-              return <th>{column}</th>; })}
+            {dataColumns.map((column, index) => {
+              return <th key={'indx' + index}>{column}</th>; })}
           </tr>
       </thead>);
 
     const tableBody = 
         dataRows.map((row, index) => {
             return (
-                <tr>
-                    {dataColumns.map(column => <td>{row[column]}</td>)}
+                <tr key={'myKey' + index}>
+                    {dataColumns.map((column, idx) => <td key={'index' + idx}>{row[column]}</td>)}
                 </tr>
             ); 
         });

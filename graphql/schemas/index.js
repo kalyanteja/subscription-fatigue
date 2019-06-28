@@ -50,7 +50,8 @@ input SubscriptionInput {
     companyId: String!
     description: String
     period: String!
-    date: String
+    date: String,
+    id: String
 }
 
 type RootQuery {
